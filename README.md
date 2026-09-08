@@ -2,7 +2,7 @@
 
 An enterprise-style banking dashboard built to demonstrate production-oriented frontend engineering for **BFSI / FinTech applications**.
 
-The project focuses on typed domain models, server-state management, reusable components, responsive UI, accessible interactions, loading/error states, and a clean service boundary ready for REST API integration.
+The project focuses on typed domain models, server-state management, reusable components, responsive UI, accessible interactions, loading/error states, automated tests, and a clean service boundary ready for REST API integration.
 
 ## 🎯 Business Use Case
 
@@ -21,14 +21,16 @@ This portfolio application models that experience with realistic mock data while
 - Notification count
 - Quick banking actions
 - Cards, Loans & EMI, Beneficiaries, and Analytics modules
-- Loading state
-- Error state with retry
+- Loading state with accessible status announcement
+- Error state with accessible retry action
 - Responsive layout
 - Keyboard-visible focus states
 - Semantic HTML and accessible status messaging
 - Typed banking domain models
 - TanStack Query server-state layer
 - Isolated service/API layer
+- Vitest + React Testing Library test coverage for core UI states and API contract
+- GitHub Actions quality pipeline
 
 ## 🧱 Architecture
 
@@ -42,9 +44,13 @@ src/
 ├── hooks/
 │   └── useDashboard.ts
 ├── services/
-│   └── bankingApi.ts
+│   ├── bankingApi.ts
+│   └── bankingApi.test.ts
+├── test/
+│   └── setup.ts
 ├── types/
 │   └── banking.ts
+├── App.test.tsx
 ├── App.tsx
 ├── main.tsx
 └── styles.css
@@ -107,29 +113,48 @@ Components should not know whether data comes from mock data, REST, or another b
 The dashboard uses:
 
 - Semantic landmarks and headings
-- Accessible table headers
-- `role="status"` and `role="alert"` for important state changes
+- Accessible table headers and caption
+- `role="status"` with `aria-live` for loading/success notifications
+- `role="alert"` for blocking error states
+- `aria-busy` while dashboard data is loading
 - Keyboard-visible focus indicators
 - Buttons for actions rather than clickable non-interactive elements
 - Status labels that include text rather than relying on color alone
 - Responsive layouts for smaller screens
 
-## 🧪 Testing Plan
+## 🧪 Testing
 
-Recommended next test layer:
+The project uses **Vitest + React Testing Library**.
 
-- Vitest
-- React Testing Library
+Covered scenarios include:
 
-Priority scenarios:
+1. Dashboard loading state renders as an accessible status.
+2. Successful account data and transaction rows render.
+3. Notification count is exposed accessibly.
+4. Error state exposes a retry action and invokes refetch.
+5. Banking service returns the expected typed dashboard contract.
 
-1. Dashboard loading state renders.
-2. Successful account data renders.
-3. Error state exposes a retry action.
-4. Transaction rows render with stable IDs.
-5. Debit and credit values are presented correctly.
-6. Quick actions provide accessible buttons.
-7. Mobile layout remains usable.
+Run tests locally:
+
+```bash
+npm test
+```
+
+## 🤖 CI Quality Gate
+
+GitHub Actions runs on pushes and pull requests targeting `main` and performs:
+
+```text
+Install dependencies
+      ↓
+Lint
+      ↓
+Vitest unit/component tests
+      ↓
+TypeScript + Vite production build
+```
+
+The workflow is defined in `.github/workflows/ci.yml`.
 
 ## 🚀 Run Locally
 
@@ -148,6 +173,12 @@ Lint:
 
 ```bash
 npm run lint
+```
+
+Tests:
+
+```bash
+npm test
 ```
 
 ## 🔐 Security
@@ -175,14 +206,14 @@ Add screenshots after the final visual polish:
 - [x] Responsive banking dashboard
 - [x] Loading/error states
 - [x] Accessibility foundation
+- [x] Vitest + React Testing Library
+- [x] GitHub Actions CI configuration
 - [ ] Real REST API integration
 - [ ] Authentication / authorization
 - [ ] Fund transfer workflow
 - [ ] Beneficiary management
 - [ ] Loans and EMI workflows
 - [ ] Spending charts
-- [ ] Vitest + React Testing Library
-- [ ] GitHub Actions CI
 - [ ] E2E testing
 
 ## 👩‍💻 Author
