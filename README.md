@@ -2,7 +2,7 @@
 
 An enterprise-style banking dashboard built to demonstrate production-oriented frontend engineering for **BFSI / FinTech applications**.
 
-The project focuses on typed domain models, server-state management, reusable components, responsive UI, accessible interactions, loading/error states, automated tests, and a clean service boundary ready for REST API integration.
+The project demonstrates typed banking domain models, server-state management, reusable components, responsive UI, accessibility, automated tests, CI, and a clean service boundary ready for REST API integration.
 
 ## 🎯 Business Use Case
 
@@ -21,42 +21,17 @@ This portfolio application models that experience with realistic mock data while
 - Notification count
 - Quick banking actions
 - Cards, Loans & EMI, Beneficiaries, and Analytics modules
-- Loading state with accessible status announcement
-- Error state with accessible retry action
+- Loading and error states with retry
 - Responsive layout
 - Keyboard-visible focus states
 - Semantic HTML and accessible status messaging
-- Typed banking domain models
+- Strict TypeScript banking domain models
 - TanStack Query server-state layer
 - Isolated service/API layer
-- Vitest + React Testing Library test coverage for core UI states and API contract
+- Vitest + React Testing Library coverage for core UI states and API contract
 - GitHub Actions quality pipeline
 
 ## 🧱 Architecture
-
-```text
-src/
-├── components/
-│   ├── AccountCard.tsx
-│   ├── QuickActions.tsx
-│   ├── StatCard.tsx
-│   └── TransactionTable.tsx
-├── hooks/
-│   └── useDashboard.ts
-├── services/
-│   ├── bankingApi.ts
-│   └── bankingApi.test.ts
-├── test/
-│   └── setup.ts
-├── types/
-│   └── banking.ts
-├── App.test.tsx
-├── App.tsx
-├── main.tsx
-└── styles.css
-```
-
-### Data flow
 
 ```text
 UI Components
@@ -67,10 +42,10 @@ TanStack Query
       ↓
 bankingApi.ts
       ↓
-REST API / Backend
+REST API / Banking Backend
 ```
 
-The current service returns mock data. In a production application, the service can be replaced with HTTP calls without moving network concerns into presentational components.
+The current service returns mock data. In production, the service can be replaced with HTTP calls without moving network concerns into presentational components.
 
 ## 🔌 REST API Contract — Production Target
 
@@ -96,31 +71,17 @@ interface FundTransferRequest {
 
 ## 🧠 Engineering Decisions
 
-### Why TypeScript?
+### TypeScript
 
-Banking applications contain important domain concepts such as accounts, transactions, balances, statuses, and payment requests. Strong typing reduces accidental misuse and makes contracts easier to understand and refactor.
+Banking applications contain important domain concepts such as accounts, transactions, balances, statuses, and payment requests. Strong typing makes contracts explicit and reduces accidental misuse during refactoring.
 
-### Why TanStack Query?
+### TanStack Query
 
-Server state has different lifecycle concerns from local UI state. TanStack Query provides caching, loading/error states, retries, and refetching while keeping components focused on rendering and user interaction.
+Server state has different lifecycle concerns from local UI state. TanStack Query manages caching, loading/error states, retries, and refetching while keeping components focused on rendering and interaction.
 
-### Why a service layer?
+### Service layer
 
 Components should not know whether data comes from mock data, REST, or another backend. The service boundary makes the UI easier to test and the API integration easier to replace.
-
-## ♿ Accessibility
-
-The dashboard uses:
-
-- Semantic landmarks and headings
-- Accessible table headers and caption
-- `role="status"` with `aria-live` for loading/success notifications
-- `role="alert"` for blocking error states
-- `aria-busy` while dashboard data is loading
-- Keyboard-visible focus indicators
-- Buttons for actions rather than clickable non-interactive elements
-- Status labels that include text rather than relying on color alone
-- Responsive layouts for smaller screens
 
 ## 🧪 Testing
 
@@ -130,14 +91,18 @@ Covered scenarios include:
 
 1. Dashboard loading state renders as an accessible status.
 2. Successful account data and transaction rows render.
-3. Notification count is exposed accessibly.
+3. Notification information is exposed accessibly.
 4. Error state exposes a retry action and invokes refetch.
 5. Banking service returns the expected typed dashboard contract.
 
-Run tests locally:
+### Commands
 
 ```bash
+npm install
+npm run dev
+npm run lint
 npm test
+npm run build
 ```
 
 ## 🤖 CI Quality Gate
@@ -156,30 +121,18 @@ TypeScript + Vite production build
 
 The workflow is defined in `.github/workflows/ci.yml`.
 
-## 🚀 Run Locally
+## ♿ Accessibility
 
-```bash
-npm install
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-Tests:
-
-```bash
-npm test
-```
+- Semantic landmarks and headings
+- Accessible table headers and caption
+- `role="status"` for loading/success messaging
+- `role="alert"` for errors
+- `aria-live` announcements for important state changes
+- `aria-busy` while dashboard data is loading
+- Buttons for actions rather than clickable non-interactive elements
+- Status labels with text rather than color alone
+- Keyboard-visible focus indicators
+- Responsive layouts for smaller screens
 
 ## 🔐 Security
 
@@ -189,7 +142,7 @@ Never commit secrets, API keys, authentication tokens, or real financial data.
 
 ## 📸 Screenshots / Demo
 
-Add screenshots after the final visual polish:
+Add current screenshots after final visual polish:
 
 - Dashboard overview
 - Account summary
