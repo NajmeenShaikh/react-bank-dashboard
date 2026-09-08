@@ -10,22 +10,34 @@ function App() {
   const [notice, setNotice] = useState("");
 
   if (isPending) {
-    return <main className="page-shell"><div className="state-card" role="status">Loading your banking dashboard…</div></main>;
-  }
-
-  if (isError || !data) {
     return (
       <main className="page-shell">
-        <div className="state-card" role="alert">
-          <h1>We couldn't load your dashboard</h1>
-          <p>Please try again. No account data has been changed.</p>
-          <button className="primary-button" type="button" onClick={() => refetch()}>Retry</button>
+        <div className="state-card" role="status" aria-live="polite" aria-busy="true">
+          Loading your banking dashboard…
         </div>
       </main>
     );
   }
 
-  const spending = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(data.monthlySpending);
+  if (isError || !data) {
+    return (
+      <main className="page-shell">
+        <div className="state-card" role="alert" aria-live="assertive">
+          <h1>We couldn't load your dashboard</h1>
+          <p>Please try again. No account data has been changed.</p>
+          <button className="primary-button" type="button" onClick={() => refetch()}>
+            Retry
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  const spending = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(data.monthlySpending);
 
   return (
     <main className="page-shell">
@@ -36,11 +48,15 @@ function App() {
           <p className="muted">Here’s your financial overview.</p>
         </div>
         <div className="notification" aria-label={`${data.unreadNotifications} unread notifications`}>
-          Notifications <span>{data.unreadNotifications}</span>
+          Notifications <span aria-hidden="true">{data.unreadNotifications}</span>
         </div>
       </header>
 
-      {notice && <div className="notice" role="status" aria-live="polite">{notice}</div>}
+      {notice && (
+        <div className="notice" role="status" aria-live="polite">
+          {notice}
+        </div>
+      )}
 
       <AccountCard account={data.account} />
 
@@ -65,7 +81,9 @@ function App() {
           <article className="feature-card" key={title}>
             <h2>{title}</h2>
             <p>{description}</p>
-            <button type="button" onClick={() => setNotice(`${title} module selected.`)}>Open module</button>
+            <button type="button" onClick={() => setNotice(`${title} module selected.`)}>
+              Open module
+            </button>
           </article>
         ))}
       </section>
